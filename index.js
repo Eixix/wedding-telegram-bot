@@ -5,9 +5,11 @@ const schedule = require("node-schedule");
 const token = process.env.BOT_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
 let started = false;
+let countdown = 10;
 
 bot.onText(/\/start/, msg => {
     if (!started) {
+        started = true;
         bot.sendMessage(msg.chat.id, "Bot gestartet!");
 
         schedule.scheduleJob('0 0 * * 2', () => {
@@ -47,7 +49,8 @@ bot.onText(/\/start/, msg => {
             bot.sendMessage(msg.chat.id, "Noch 1 Minute...");
         });
         schedule.scheduleJob('50-59 59 15 * * 6', () => {
-            bot.sendMessage(msg.chat.id, "Gleich gehts los!");
+            bot.sendMessage(msg.chat.id, `Es geht los in ${countdown}`);
+            countdown--;
         });
     }
 });
